@@ -1,10 +1,29 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <!-- Show Navbar with router-view -->
+  <NavbarComponent v-if="showNavbar" />
+  <!-- Show only router-view -->
+  <router-view :key="route.params"/>
 </template>
+
+<script setup>
+  import NavbarComponent from './components/NavbarComponent.vue';
+
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
+
+  const route = useRoute()
+  const pagesWithoutNavbar = ['/login', '/register'];
+
+  const showNavbar = computed(()=>{
+    if(pagesWithoutNavbar.includes(route.path)){
+      return false
+    } else {
+      return true
+    }
+  })
+
+
+</script>
 
 <style lang="scss">
 #app {

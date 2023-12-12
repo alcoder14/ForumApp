@@ -1,5 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import HomeView from '../views/HomeView.vue'
+import LoginView  from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import AskView from '../views/AskView.vue'
+import TopicView from '../views/TopicView.vue'
+import ProfileView from '../views/ProfileView.vue'
+import SearchView from '../views/SearchView.vue'
+import QuestionView from '../views/QuestionView.vue'
 
 const routes = [
   {
@@ -8,18 +16,72 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/login',
+    name: 'login',
+    component: LoginView
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterView
+  },
+  {
+    path: '/ask',
+    name: 'ask',
+    component: AskView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/topic/:topic',
+    name: 'topic',
+    component: TopicView
+  },
+  {
+    path: '/user/:id',
+    name: 'user',
+    component: ProfileView,
+  },
+  {
+    path: '/search/:query',
+    name: 'search',
+    component: SearchView
+  },
+  {
+    path: '/question/:id',
+    name: 'path',
+    component: QuestionView
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user)=> { 
+        removeListener(); 
+        resolve(user)
+      }, 
+      reject) 
+  })
+}
+
+router.beforeEach( async (to, from, next) => {
+  if(to.matched.some((record) => record.meta.requiresAuth)){
+    if(await getCurrentUser()){
+      next()
+    } else {
+      next("/")
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

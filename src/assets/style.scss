@@ -1,0 +1,135 @@
+
+@mixin flex-row(){
+    display: flex;
+    flex-direction: row;
+}
+@mixin flex-column(){
+    display: flex;
+    flex-direction: column;
+}
+
+$green: #a585c7;
+$purple: #e0d1ff;
+$grey: #363636;
+$darkgrey: #2C2C2C;
+$lightgrey: #777777;
+$white: white;
+
+@import "forms.scss";
+
+.outer-container{
+    width: 100%;
+    min-height: 90vh;
+    padding: 4rem 0;
+    background-color: $darkgrey;
+}
+.inner-container{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 90vh;
+}
+@media(max-width: 1300px){
+    .inner-container{
+        max-width: 1000px;
+    }
+}
+@media(max-width: 1200px){
+    .inner-container{
+        min-height: 91vh;
+    }
+}
+@media(max-width: 1100px){
+    .inner-container{
+        max-width: 800px;
+    }
+}
+@media(max-width: 860px){
+    .inner-container{
+        margin: 0 30px;
+        max-width: 100%;
+    }
+}
+
+.tools-multiple-container, .tools-single-container{
+    width: 100%;
+    @include flex-row();
+    margin-bottom: 2rem;
+}
+.tools-multiple-container{
+    justify-content: space-between;
+}
+.tools-single-container{
+    justify-content: flex-start;
+}
+.title{
+    color: $white;
+    font-size: 3rem;
+    font-weight: lighter;
+}
+
+.tool{
+    padding: 8px 14px;
+    color: $darkgrey;
+    border: 0;
+    outline: 0;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.tool-green{
+    background-color: $purple;
+}
+.tool-red{
+    background-color: rgb(237, 120, 120);
+}
+
+
+@media(max-width: 700px){
+    .tool{
+        font-size: 1.6rem;
+    }
+}
+.icon-margin-right{
+    margin-right: 1rem;
+}
+.container-margin-top{
+    margin-top: 4rem;
+}
+
+.errMessage{
+    color: rgb(255, 52, 52);
+    margin-bottom: 1.2rem;
+    grid-column: 1 / span 2;
+    justify-self: start;
+    font-size: 2rem;
+}
+
+/* Router-links outside of navbar */
+
+.link{
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.link-purple{
+    color: $purple;
+}
+
+.link-purple:hover{
+    color: $green;
+}
+
+.link-green{
+    color: $green;
+}
+
+/* Users Container */
+
+.users-container{
+    display: grid;
+    grid-template-columns: repeat(5, 19%);
+    column-gap: 1.25%;
+    justify-content: space-between;
+    margin-top: 4rem;
+}
