@@ -77,6 +77,7 @@
   const testScreenSize = () =>{
     if(window.innerWidth <= 860){
       mobileView.value = true
+      answerFormVisible.value = false
     } else {
       mobileView.value = false
       mobileForm.value = false
@@ -246,23 +247,23 @@
 
     @media(max-width: 860px){
       .question-title{
-        font-size: 7vw;
+        font-size: 6vw;
       }
       .question-metadata{
-        font-size: 4vw;
+        font-size: 2vw;
       }
       .question-description{
-        font-size: 4.5vw;
+        font-size: 3.5vw;
       }
       .tools-left-side{
         .title{
-          font-size: 4vw;
+          font-size: 3vw;
         }
       }
       .tools-right-side{
         .label{
           margin-right: 1rem;
-          font-size: 4vw;
+          font-size: 3vw;
         }
       }
 

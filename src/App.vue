@@ -1,15 +1,22 @@
 <template>
   <!-- Show Navbar with router-view -->
-  <NavbarComponent v-if="showNavbar" />
+  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" />
+  <SearchBar />
+  <MobileNavbarComponent v-if="showNavbar && visibleNavbar === 'mobile' " @signOut="handleSignOut" :loggedInUserID="loggedInUserID" :IsLoggedIn="isLoggedIn" />
+
   <!-- Show only router-view -->
   <router-view :key="route.params"/>
 </template>
 
 <script setup>
   import NavbarComponent from './components/NavbarComponent.vue';
+  import MobileNavbarComponent from './components/MobileNavbarComponent.vue';
+  import SearchBar from './components/SearchBar.vue';
 
-  import { computed } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { useRoute } from 'vue-router';
+
+  // NAVBARS LOGIC
 
   const route = useRoute()
   const pagesWithoutNavbar = ['/login', '/register'];
@@ -21,6 +28,52 @@
       return true
     }
   })
+
+  let visibleNavbar = ref(null)
+
+  const checkWidth = () => {
+    if(window.innerWidth > 860){
+      visibleNavbar.value = "desktop"
+    } else {
+      visibleNavbar.value = "mobile"
+    }
+  }
+
+  onMounted(() => {
+    checkWidth()
+    window.addEventListener("resize", checkWidth)
+  })
+
+  // Check If user is logged in 
+
+  import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+  import { useRouter } from 'vue-router';
+
+  let router = useRouter()
+  let isLoggedIn = ref(false)
+  let auth;
+
+  let loggedInUserID = ref("")
+  onMounted(() =>{
+      auth = getAuth()
+      onAuthStateChanged(auth, (user) =>{
+          if(user){
+              isLoggedIn.value = true
+              loggedInUserID = user.uid
+          } else {
+              isLoggedIn.value = false
+          }
+      })
+
+  })
+
+  const handleSignOut = () =>{
+    signOut(auth)
+        .then(() => {
+            router.push("/")
+        })
+  }
+
 
 
 </script>

@@ -375,7 +375,7 @@
         display: none;
         z-index: 50;
         position: fixed;
-        bottom: 5rem;
+        bottom: calc(10vh + 5rem);
         right: 5rem;
         height: 5rem;
         width: 5rem;
@@ -416,10 +416,6 @@
             justify-content: flex-start;
             margin: 4rem 0;  
         }
-
-        .mobile-settings-btn{
-            display: block;
-        }
     }
 
     @media(max-width: 860px){
@@ -447,6 +443,10 @@
                 width: 25%;
             }
         }
+
+        .mobile-settings-btn{
+            display: block;
+        }
     }
 
     @media(max-width: 670px){
@@ -463,7 +463,7 @@
             margin-bottom: 2rem;
         }
         .mobile-settings-btn{
-            bottom: 3rem;
+            bottom: calc(10vh + 3rem);
             right: 3rem;
             height: 7vw;
             width: 7vw;

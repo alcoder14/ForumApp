@@ -52,4 +52,19 @@
         color: $white;
         font-size: 2.5rem;
     }
+
+    @media(max-width: 860px){
+        .answer-author{
+            font-size: 2.6vw;
+        }
+        .parent-question{
+            font-size: 3.3vw;
+        }
+        .answer-datetime{
+            font-size: 2.3vw;
+        }
+        .answer-content{
+            font-size: 3.3vw;
+        }
+    }
 </style>
