@@ -27,15 +27,6 @@
 
 <style lang="scss" scoped>
     @import "@/assets/style.scss";
-    .modal-container{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        z-index: 200;
-        background-color: $grey;
-    }
     .close-modal-btn{
         background: transparent;
         outline: 0;

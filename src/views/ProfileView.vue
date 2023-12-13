@@ -16,7 +16,7 @@
                     
                     <div class="user-edit-row" v-if="editUsernameVisible">
                         <input type="text" v-model="username" class="edit-user-input">
-                        <button class="confirm-btn edit-user-btn" @click="updateUsername"> <font-awesome-icon icon="fa-check" /></button>
+                        <button class="confirm-btn edit-user-btn" @click="updateUsername(username, userDataRef.username)"> <font-awesome-icon icon="fa-check" /></button>
                         <button class="discard-btn edit-user-btn" @click="toggleEditUsername"> <font-awesome-icon icon="fa-xmark" /></button>
                     </div>
 
@@ -38,7 +38,7 @@
 
                     <div class="user-edit-row" v-if="editFullNameVisible">
                         <input type="text" v-model="fullname" class="edit-user-input">
-                        <button class="confirm-btn edit-user-btn" @click="updateFullName"> <font-awesome-icon icon="fa-check" /></button>
+                        <button class="confirm-btn edit-user-btn" @click="updateFullName(fullname)"> <font-awesome-icon icon="fa-check" /></button>
                         <button class="discard-btn edit-user-btn" @click="toggleEditFullName"> <font-awesome-icon icon="fa-xmark" /></button>
                     </div>
 
@@ -68,6 +68,13 @@
                 </div>
 
             </div>
+
+            <button class="mobile-settings-btn" @click="toggleMobileSettings">
+                <font-awesome-icon icon="fa fa-pen" />
+            </button>
+            
+            <MobileSettingsModal :username="userDataRef.username" :fullname="userDataRef.fullName" v-if="mobileSettingsVisible && authenticatedUserUID === userID" @closeModal="toggleMobileSettings" @updateUserData="receiveUpdateFromMobile" />
+            
         </div>
     </div>
 </template>
@@ -77,9 +84,10 @@
     import { useRoute } from 'vue-router';
     import { db } from '@/firebase';
     import { doc, getDoc, updateDoc, collection, query, where, getDocs} from 'firebase/firestore';
-    import { getAuth, onAuthStateChanged } from 'firebase/auth';
+    import { getAuth, onAuthStateChanged} from 'firebase/auth';
     import QuestionItem from '@/boxes/QuestionItem.vue';
     import AnswerItem from '@/boxes/AnswerItem.vue';
+    import MobileSettingsModal from '@/modals/MobileSettingsModal.vue';
 
     // Authentication Check
     let auth = getAuth()
@@ -93,17 +101,26 @@
     const route = useRoute()
     const userID = route.params.id
 
-    // Get Data
+    const checkScreenWidth = () => {
+        if(window.innerWidth > 1100){
+            mobileSettingsVisible.value = false
+        }
+    }
+
     onMounted(() => {
         getUserData()
         getUserQuestions()
         getUserAnswers()
+        checkScreenWidth()
     })
+
+    window.addEventListener("resize", checkScreenWidth)
 
     let userDataRef = ref({});
     let username = ref("");
     let fullname = ref("")
 
+    // Get User Data/statistics
     const getUserData = async () => {
 
         const userRef = doc(db, "users", userID);
@@ -127,7 +144,6 @@
 
     // Get questions associated with user
     let userQuestions = ref([])
-
     const getUserQuestions = async () =>  {
 
         const q = query(collection(db, "questions"), where("authorID", "==", userID ))
@@ -147,7 +163,6 @@
 
     // Get answers associated with user
     let userAnswers = ref([])
-
     const getUserAnswers = async () =>{
         
         const q = query(collection(db, "answers"), where("authorID", "==", userID ))
@@ -179,41 +194,43 @@
     }
 
     // Update username
-    const updateUsername = async () => {
+    const updateUsername = async (newUsername, existingUsername) => {
 
+        // Update username in users
         const usernameRef = doc(db, "users", userID)
-
         await updateDoc(usernameRef, {
-            username: username.value
+            username: newUsername
         })
         getUserData()
 
+        // Update author of answers
         userAnswers.value.forEach(async (answer) => {
 
-            if(answer.author === userDataRef.value.username){
+            if(answer.author === existingUsername){
 
                 const answerUpdateRef = doc(db, "answers", answer.id);
                 await updateDoc(answerUpdateRef, {
-                    author: username.value
+                    author: newUsername
                 })
 
             }    
 
         })
 
+        // Update author of questions
         userQuestions.value.forEach(async(question) => {
 
-            if(question.author === userDataRef.value.username){
+            if(question.author === existingUsername){
 
                 const questionUpdateRef = doc(db, "questions", question.id)
                 await updateDoc(questionUpdateRef, {
-                    author: username.value
+                    author: newUsername
                 })
             }
 
         })
 
-        toggleEditUsername();
+        editUsernameVisible.value = false
     }
 
     // Enable updating full name
@@ -224,17 +241,43 @@
     }
 
     // Update full name
-    const updateFullName = async () =>{
+    const updateFullName = async (newFullName) =>{
 
         const fullNameRef = doc(db, "users", userID)
 
         await updateDoc(fullNameRef, {
-            fullName: fullname.value
+            fullName: newFullName
         })
 
         getUserData()
-        toggleEditFullName()
+        editFullNameVisible.value = false
     }
+
+
+    // Toggle mobile settings modal
+    let mobileSettingsVisible = ref(false)
+    const toggleMobileSettings = () =>{
+        mobileSettingsVisible.value = !mobileSettingsVisible.value
+        console.log("here")
+    }
+
+    // Receive Update From Mobile form
+
+    const receiveUpdateFromMobile = (newUsername, newFullName) => {
+        console.log(newUsername)
+        console.log(newFullName)
+
+        if(newUsername !== userDataRef.value.username){
+            updateUsername(newUsername, userDataRef.value.username)
+        }
+
+        if(newFullName !== userDataRef.value.fullName){
+            updateFullName(newFullName, userDataRef.value.newFullName)
+        }
+
+        toggleMobileSettings()
+    }
+
 
 </script>
 
@@ -328,6 +371,22 @@
 
     }
 
+    .mobile-settings-btn{
+        display: none;
+        z-index: 50;
+        position: fixed;
+        bottom: 5rem;
+        right: 5rem;
+        height: 5rem;
+        width: 5rem;
+        font-size: 2.5rem;
+        background-color: $purple;
+        color: $darkgrey;
+        outline: none;
+        border: none;
+        cursor: pointer;
+    }
+
 
     /* Media Queries */
 
@@ -346,12 +405,20 @@
             margin: 0;
             margin-right: 4rem;
         }
+        .user-icon{
+            height: 10rem;
+            width: 10rem;
+            font-size: 5rem;
+        }
+        
         .option-boxes{
             @include flex-row();
             justify-content: flex-start;
-            margin: 4rem 0;
+            margin: 4rem 0;  
+        }
 
-           
+        .mobile-settings-btn{
+            display: block;
         }
     }
 
@@ -359,12 +426,17 @@
         .user-icon{
             font-size: 5vw;
             padding: 2rem;
+            height: 10vw;
+            width: 10vw;
+        }
+        .edit-btn{
+            display: none;
         }
         .user-data{
-            font-size: 4vw;
+            font-size: 3.2vw;
         }
         .user-data-username{
-            font-size: 3vw;
+            font-size: 2.4vw;
         }
         .option-boxes{
             justify-content: space-between;
@@ -372,6 +444,7 @@
             .option-box{
                 margin: 0;
                 font-size: 3vw;
+                width: 25%;
             }
         }
     }
@@ -386,6 +459,15 @@
         .user-data-username{
             font-size: 2.6vw;
         }
+        .option-boxes{
+            margin-bottom: 2rem;
+        }
+        .mobile-settings-btn{
+            bottom: 3rem;
+            right: 3rem;
+            height: 7vw;
+            width: 7vw;
+            font-size: 4vw;
+        }
     }
-
 </style>

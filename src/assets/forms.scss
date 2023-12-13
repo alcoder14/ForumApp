@@ -1,3 +1,6 @@
+
+// Login and Registration
+
 .form-page-container{
     background-color: $darkgrey;
     width: 100%;
@@ -13,6 +16,9 @@
     margin-right: auto;
     @include flex-column();
 }
+
+// Other form components
+
 .form-title-container{
     height: 80px;
     @include flex-column();
@@ -112,5 +118,10 @@
     padding: 0.4rem;
     font-size: 2rem;
     cursor: pointer;
-    
+    background-color: $purple;
+    color: $darkgrey;
+    transition: all 0.2s;
+}
+.edit-user-btn:hover{
+    background-color: $green;
 }

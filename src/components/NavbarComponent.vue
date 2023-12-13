@@ -55,6 +55,7 @@
                 isLoggedIn.value = false
             }
         })
+
     })
 
     const handleSignOut = () =>{
@@ -74,6 +75,7 @@
     const getLoggedInUserID = async (username) => {
 
         console.log(username)
+        console.log("hello world")
         
         const q = query(collection(db, "users"), where("username", "==", username))
         const querySnapshot = await getDocs(q);
@@ -81,6 +83,7 @@
 
         querySnapshot.forEach((doc) => {
             loggedInUserID.value = doc.id
+            console.log(loggedInUserID.value)
         })
 
     }

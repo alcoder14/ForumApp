@@ -9,4 +9,13 @@ import { faPlus, faHouse, faUser, faRightFromBracket, faMagnifyingGlass, faPen, 
 
 library.add(faPlus, faHouse, faUser, faRightFromBracket, faMagnifyingGlass, faPen, faChevronDown, faAnglesUp, faRightToBracket, faPenToSquare, faXmark, faArrowRight, faFaceFrown, faCheck)
 
-createApp(App).use(router).component("font-awesome-icon", FontAwesomeIcon).mount('#app')
+import mitt from 'mitt'
+const emitter = mitt()
+
+const app = createApp(App)
+
+app.use(router)
+app.component("font-awesome-icon", FontAwesomeIcon)
+
+app.config.globalProperties.emitter = emitter
+app.mount("#app")
