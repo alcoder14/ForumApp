@@ -1,7 +1,7 @@
 <template>
   <!-- Show Navbar with router-view -->
-  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" />
-  <SearchBar />
+  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" :loggedInUserID="loggedInUserID" :IsLoggedIn="isLoggedIn" />
+  <SearchBar v-if="showNavbar" />
   <MobileNavbarComponent v-if="showNavbar && visibleNavbar === 'mobile' " @signOut="handleSignOut" :loggedInUserID="loggedInUserID" :IsLoggedIn="isLoggedIn" />
 
   <!-- Show only router-view -->
