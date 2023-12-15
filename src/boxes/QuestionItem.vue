@@ -1,39 +1,74 @@
 <template>
-    <router-link :to="'/question/' + questionDataValues.id" class="question-link" >
+    
         <div class="question-item">
 
             <div class="upper-row">
-                <div class="data-box" v-if="!hideUsername">
-                    @{{ questionDataValues.author }}
+                <div class="upper-row-left">
+                    <div class="data-box" v-if="!hideUsername">
+                        @{{ questionDataValues.author }}
+                    </div>
+                    <div class="data-box">
+                        {{ questionDataValues.category }}
+                    </div>
+                    <div class="data-box">
+                        {{ questionDataValues.date }}
+                        at
+                        {{ questionDataValues.time }}
+                    </div>    
                 </div>
-                <div class="data-box">
-                    {{ questionDataValues.category }}
-                </div>
-                <div class="data-box">
-                    {{ questionDataValues.date }}
-                    at
-                    {{ questionDataValues.time }}
-                </div>
+
+                <button class="delete-question-btn tool-red" type="button" v-if="shownOnProfilePage && authorAuthenticated" @click="emitHideQuestion" >Delete</button>
+                
             </div>
 
-            <div class="lower-row">
-                <h2 class="question-text">
-                    {{ questionDataValues.question }}
-                </h2>
+            <router-link :to="'/question/' + questionDataValues.id" class="question-link" >
+                <div class="lower-row">
+                    <h2 class="question-text">
+                        {{ questionDataValues.question }}
+                    </h2>
 
-                <font-awesome-icon icon="fa fa-arrow-right" class="link-arrow" />
-            </div>
-            
+                    <font-awesome-icon icon="fa fa-arrow-right" class="link-arrow" />
+                </div>
+            </router-link>
         </div>
-    </router-link>
+
 </template>
 
 <script setup>
-    import { defineProps, ref } from 'vue';
+    import { defineProps, defineEmits, ref, onMounted } from 'vue';
+    import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-    const props = defineProps(["questionData", "hideUsername"])
+    const props = defineProps(["questionData", "hideUsername", "shownOnProfilePage"])
     const questionDataValues = ref(props.questionData)
     const hideUsername = ref(props.hideUsername)
+    const shownOnProfilePage = ref(props.shownOnProfilePage)
+
+    let authorAuthenticated = ref(false)
+    let auth
+    onMounted(() => {
+        auth = getAuth()
+        onAuthStateChanged(auth, (user) => {
+            if(user){
+                console.log(user)
+
+                if(user.uid === questionDataValues.value.authorID){
+                    authorAuthenticated.value = true
+                }
+
+            } else {
+                console.log("user not authenticated - question")
+            }
+        })
+    })
+
+    const emits = defineEmits(['hideQuestion'])
+
+    // temporarily hide question
+
+    const emitHideQuestion = () =>{
+        emits("hideQuestion", questionDataValues.value.id)
+    }
+
 
 </script>
 
@@ -56,6 +91,7 @@
         transform: translateX(-14rem);
         transition: all 0.4s;
     }
+    /*
     .question-item:hover{
         transform: translateX(2rem);
         border-left: 1rem solid $purple;
@@ -64,11 +100,8 @@
         opacity: 1;
         transform: translateX(-4rem);
     }
+    */
 
-    .upper-row, .lower-row{
-        @include flex-row();
-        justify-content: flex-start;
-    }
     .data-box{
         background-color: $darkgrey;
         color: $purple;
@@ -76,10 +109,25 @@
         font-size: 1.4rem;
         margin-right: 1rem;
     }
+    .upper-row, .lower-row{
+        @include flex-row();
+        justify-content: space-between;
+    }
+    .upper-row .upper-row-left{
+        @include flex-row();
+        justify-content: flex-start;
+    }
+    .delete-question-btn{
+        align-self: center;
+        padding: 1rem;
+        border: 0;
+        outline: 0;
+        color: $white;
+        cursor: pointer;
+    }
     .lower-row{
         text-align: left;
         @include flex-row();
-        justify-content: space-between;
         align-items: center;
     }
     .question-text{
@@ -89,7 +137,7 @@
     }
 
     @media(max-width: 860px){
-        .data-box{
+        .data-box, .delete-question-btn{
             font-size: 2vw;
         }
         .question-text{

@@ -133,14 +133,20 @@
         .topic-list-item{
             color: $white;
             padding: 2rem;
-            font-size: 4rem;
+            font-size: 3.2rem;
             text-decoration: none;
             color: $white;
+            transition: color 0.2s;
+        }
+        .topic-list-item:hover{
+            color: $green;
         }
     }
 
     .hide-list-btn{
-        background-color: $green;
+        background-color: $purple;
+        padding: 1rem;
+        color: $darkgrey;
     }
 
     .show-list-animation{

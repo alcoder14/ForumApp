@@ -55,7 +55,7 @@
                     <button class="option-box" @click="setVisibleDataset($event)" :class="{'chosen-option-box': visibleDataSet === 'Followers'}">Followers</button>
                 </div>
                 <div class="user-questions" v-if="visibleDataSet === 'Questions'">
-                    <QuestionItem v-for="question in userQuestions" :key="question.id" :questionData="question" :hideUsername="true"/>
+                    <QuestionItem v-for="question in userQuestions" :key="question.id" :questionData="question" :hideUsername="true" :shownOnProfilePage="true" @hideQuestion="hideQuestion" />
                 </div>
                 <div class="user-answers" v-if="visibleDataSet === 'Answers'">
                     <AnswerItem v-for="answer in userAnswers" :key="answer.id" :answerData="answer" :showQuestion="true" />
@@ -69,11 +69,19 @@
 
             </div>
 
+            <!-- Modals with fixed position -->
+
             <button class="mobile-settings-btn" @click="toggleMobileSettings">
                 <font-awesome-icon icon="fa fa-pen" />
             </button>
             
             <MobileSettingsModal :username="userDataRef.username" :fullname="userDataRef.fullName" v-if="mobileSettingsVisible && authenticatedUserUID === userID" @closeModal="toggleMobileSettings" @updateUserData="receiveUpdateFromMobile" />
+
+            <div class="warning-container" v-if="warningVisible">
+                <button class="close-btn" @click="deleteQuestion" ><font-awesome-icon icon="fa fa-xmark" /></button>
+                <p>Question was deleted</p>
+                <button @click="cancelDeletion" class="undo-btn" >Undo</button>
+            </div>
             
         </div>
     </div>
@@ -83,7 +91,7 @@
     import { onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
     import { db } from '@/firebase';
-    import { doc, getDoc, updateDoc, collection, query, where, getDocs} from 'firebase/firestore';
+    import { doc, getDoc, updateDoc, collection, query, where, getDocs, deleteDoc} from 'firebase/firestore';
     import { getAuth, onAuthStateChanged} from 'firebase/auth';
     import QuestionItem from '@/boxes/QuestionItem.vue';
     import AnswerItem from '@/boxes/AnswerItem.vue';
@@ -157,8 +165,48 @@
         })
 
         userQuestions.value = userQuestionsFirebase
+        console.log(userQuestions.value)
     
     }
+
+    // Hide Question - requested from QuestionItem.vue
+
+    let warningVisible = ref(false)
+    let deletionTimeout = null;
+    const hideQuestion = (id) => {
+        warningVisible.value = true
+        userQuestions.value = userQuestions.value.filter(question => question.id !== id)
+
+        // Wait for three seconds before deleting question
+        deletionTimeout = setTimeout(() => {
+            warningVisible.value = false
+            deleteQuestion(id)
+        }, 3000)
+    }
+
+    // Delete question and associated answers 
+
+    const deleteQuestion = async (id) =>{
+
+        await deleteDoc(doc(db, "questions", id))
+
+        userAnswers.value.forEach( async (answer) => {
+
+            if(answer.questionID === id){   
+                await deleteDoc(doc(db, "answers", answer.id))
+            }
+
+        })
+    }
+
+    // Cancel Deletion
+
+    const cancelDeletion = () =>{
+        clearInterval(deletionTimeout)
+        getUserQuestions()
+        warningVisible.value = false
+    }
+
 
 
     // Get answers associated with user
@@ -371,6 +419,8 @@
 
     }
 
+    // Modals with fixed position
+
     .mobile-settings-btn{
         display: none;
         z-index: 50;
@@ -385,6 +435,32 @@
         outline: none;
         border: none;
         cursor: pointer;
+    }
+
+    $warningWidth: 400px;
+    .warning-container{
+        width: $warningWidth;
+        margin-left: auto;
+        margin-right: auto;
+        position: fixed;
+        bottom: 2rem;
+        left: calc(50% - ($warningWidth / 2));
+        @include flex-row();
+        justify-content: space-between;
+        align-items: center;
+        background-color: $purple;
+        z-index: 20;
+        padding: 1rem;
+        p, button{
+            font-size: 2rem;
+        }
+        button{
+            background-color: $grey;
+            padding: 0.5rem;
+            color: $white;
+            outline: 0;
+            cursor: pointer;
+        }
     }
 
 
