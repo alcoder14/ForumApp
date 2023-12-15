@@ -43,13 +43,27 @@
 </template>
 
 <script setup>
-    import { defineProps, defineEmits, ref } from 'vue';
+    
+    import { defineEmits, ref, onMounted} from 'vue';
+    import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
     const emits = defineEmits(['signOut'])
-    const props = defineProps(['IsLoggedIn', 'loggedInUserID'])
 
-    const isLoggedIn = ref(props.IsLoggedIn)
-    const loggedInUserID = ref(props.loggedInUserID)
+    let isLoggedIn = ref(null)
+    let loggedInUserID = ref(null)
+
+    let auth;
+    onMounted(() =>{
+        auth = getAuth()
+        onAuthStateChanged(auth, (user) =>{
+            if(user){
+                isLoggedIn.value = true
+                loggedInUserID = user.uid
+            } else {
+                isLoggedIn.value = false
+            }
+        })
+    })
 
     const emitSignOut = () => {
         emits('signOut')
@@ -123,6 +137,10 @@
             text-decoration: none;
             color: $white;
         }
+    }
+
+    .hide-list-btn{
+        background-color: $green;
     }
 
     .show-list-animation{

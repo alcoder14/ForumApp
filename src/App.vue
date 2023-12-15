@@ -1,8 +1,8 @@
 <template>
   <!-- Show Navbar with router-view -->
-  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" :loggedInUserID="loggedInUserID" :IsLoggedIn="isLoggedIn" />
-  <SearchBar v-if="showNavbar" />
-  <MobileNavbarComponent v-if="showNavbar && visibleNavbar === 'mobile' " @signOut="handleSignOut" :loggedInUserID="loggedInUserID" :IsLoggedIn="isLoggedIn" />
+  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" />
+  <SearchBar v-if="showNavbar" @signOut="handleSignOut" />
+  <MobileNavbarComponent v-if="showNavbar && visibleNavbar === 'mobile' " @signOut="handleSignOut" />
 
   <!-- Show only router-view -->
   <router-view :key="route.params"/>
@@ -46,26 +46,11 @@
 
   // Check If user is logged in 
 
-  import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+  import { getAuth,  signOut } from 'firebase/auth';
   import { useRouter } from 'vue-router';
 
   let router = useRouter()
-  let isLoggedIn = ref(false)
-  let auth;
-
-  let loggedInUserID = ref("")
-  onMounted(() =>{
-      auth = getAuth()
-      onAuthStateChanged(auth, (user) =>{
-          if(user){
-              isLoggedIn.value = true
-              loggedInUserID = user.uid
-          } else {
-              isLoggedIn.value = false
-          }
-      })
-
-  })
+  let auth = getAuth;
 
   const handleSignOut = () =>{
     signOut(auth)
