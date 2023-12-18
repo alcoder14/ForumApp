@@ -7,7 +7,7 @@
             <p class="form-error" v-if="errorMessage"> {{ errorMessage }} </p>
             <input type="text" placeholder="Email" class="form-input-dark" v-model="email">
             <input type="password" placeholder="Password" class="form-input-dark" v-model="password">
-            <p class="forgot-password">Forgot Password?</p>
+            <router-link to="/reset-password" class="forgot-password">Forgot Password?</router-link>
             <button type="button" class="form-submit" @click="signIn">Log In</button>
             <div class="form-alternative-container">Not a member?
                 <router-link to="/register"><button class="form-alternative-btn" type="button">Register</button></router-link>
@@ -27,8 +27,10 @@
     const email = ref("")
     const password = ref("")
 
+    const auth = getAuth()
+
     const signIn = () => {
-        signInWithEmailAndPassword(getAuth(), email.value, password.value)
+        signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data) =>{
             console.log(data)
             router.push("/")
@@ -51,6 +53,7 @@
             }
         })
     }
+
 </script>
 
 <style lang="scss" scoped>
@@ -61,6 +64,7 @@
         align-self: flex-start;
         color: $green;
         font-size: 1.4rem;
+        text-decoration: none;
     }
 
 

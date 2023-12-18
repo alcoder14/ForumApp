@@ -8,6 +8,7 @@ import TopicView from '../views/TopicView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import SearchView from '../views/SearchView.vue'
 import QuestionView from '../views/QuestionView.vue'
+import ResetPasswordView from "../views/ResetPasswordView.vue";
 
 const routes = [
   {
@@ -50,8 +51,13 @@ const routes = [
   },
   {
     path: '/question/:id',
-    name: 'path',
+    name: 'question',
     component: QuestionView
+  },
+  {
+    path: '/reset-password',
+    name: 'reset-password',
+    component: ResetPasswordView
   }
 ]
 

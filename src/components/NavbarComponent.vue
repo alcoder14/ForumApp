@@ -47,6 +47,7 @@
     })
 
     const emitSignOut = () => {
+        console.log("hello")
         emits('signOut')
     }
 

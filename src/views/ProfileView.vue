@@ -78,7 +78,6 @@
             <MobileSettingsModal :username="userDataRef.username" :fullname="userDataRef.fullName" v-if="mobileSettingsVisible && authenticatedUserUID === userID" @closeModal="toggleMobileSettings" @updateUserData="receiveUpdateFromMobile" />
 
             <div class="warning-container" v-if="warningVisible">
-                <button class="close-btn" @click="deleteQuestion" ><font-awesome-icon icon="fa fa-xmark" /></button>
                 <p>Question was deleted</p>
                 <button @click="cancelDeletion" class="undo-btn" >Undo</button>
             </div>
@@ -189,7 +188,6 @@
     const deleteQuestion = async (id) =>{
 
         await deleteDoc(doc(db, "questions", id))
-
         userAnswers.value.forEach( async (answer) => {
 
             if(answer.questionID === id){   

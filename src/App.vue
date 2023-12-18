@@ -1,6 +1,6 @@
 <template>
   <!-- Show Navbar with router-view -->
-  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" />
+  <NavbarComponent v-if="showNavbar && visibleNavbar === 'desktop'" @signOut="handleSignOut" />
   <SearchBar v-if="showNavbar" @signOut="handleSignOut" />
   <MobileNavbarComponent v-if="showNavbar && visibleNavbar === 'mobile' " @signOut="handleSignOut" />
 
@@ -19,7 +19,7 @@
   // NAVBARS LOGIC
 
   const route = useRoute()
-  const pagesWithoutNavbar = ['/login', '/register'];
+  const pagesWithoutNavbar = ['/login', '/register', '/reset-password'];
 
   const showNavbar = computed(()=>{
     if(pagesWithoutNavbar.includes(route.path)){
@@ -50,9 +50,10 @@
   import { useRouter } from 'vue-router';
 
   let router = useRouter()
-  let auth = getAuth;
+  let auth = getAuth();
 
   const handleSignOut = () =>{
+    console.log("hello 2")
     signOut(auth)
         .then(() => {
             router.push("/")
