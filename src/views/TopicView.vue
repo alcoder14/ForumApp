@@ -2,8 +2,17 @@
     <div class="outer-container">
         <div class="inner-container">
 
-            <div class="tools-single-container">
-                <h1 class="title"> {{ topicQuestions.length }} Results in {{ topicName }}</h1>
+            <div class="tools-multiple-container">
+                <div class="tools-left-side">
+                    <h1 class="title"> {{ topicQuestions.length }} Results in {{ topicName }}</h1>
+                </div>
+                <div class="tools-right-side">
+                    <label for="sort" class="label">Sort: </label>
+                    <select id="sort" class="dropdown" v-model="sort" @change="callSortItems">
+                    <option value="oldest">Oldest</option>
+                    <option value="newest">Newest</option>
+                    </select>
+                </div>
             </div>
 
             <div class="questions-container">
@@ -19,6 +28,7 @@
     import { onSnapshot, collection } from 'firebase/firestore';
     import { db } from '@/firebase';
     import QuestionItem from '@/boxes/QuestionItem.vue';
+    import { sortItems } from '@/methods';
 
     const questionsCollectionRef = collection(db, "questions")
 
@@ -26,6 +36,7 @@
     const topicName = ref(route.params.topic)
 
     let topicQuestions = ref([])
+    let sort = ref("oldest")
 
     onMounted(() => {
 
@@ -49,9 +60,13 @@
 
             })
 
-            topicQuestions.value = topicQuestionsFirebase
+            topicQuestions.value = sortItems(topicQuestionsFirebase, sort.value)
         })
     })
+
+    const callSortItems = () => {
+        topicQuestions.value = sortItems(topicQuestions.value, sort.value)
+    }
 
 </script>
 

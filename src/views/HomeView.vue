@@ -20,6 +20,7 @@
   import { collection, onSnapshot} from 'firebase/firestore'
   import { getAuth, onAuthStateChanged } from 'firebase/auth';
   import { db } from '@/firebase'
+  import { sortItems } from '@/methods';
 
   const questionsCollectionRef = collection(db, "questions")
 
@@ -54,7 +55,7 @@
         firebaseQuestions.push(questionData)
       })
 
-      questions.value = firebaseQuestions
+      questions.value = sortItems(firebaseQuestions, "newest")
     })
 
   })

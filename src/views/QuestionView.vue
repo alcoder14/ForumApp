@@ -19,7 +19,7 @@
           </div>
           <div class="tools-right-side">
             <label for="sort" class="label">Sort: </label>
-            <select id="sort" class="dropdown" v-model="sort" @change="sortAnswers">
+            <select id="sort" class="dropdown" v-model="sort" @change="callSortItems">
               <option value="oldest">Oldest</option>
               <option value="newest">Newest</option>
             </select>
@@ -54,6 +54,7 @@
   import MobileAnswerModalVue from '@/modals/MobileAnswerModal.vue'
   import AnswerForm from '@/components/AnswerForm.vue';
   import NoAnswers from '@/components/NoAnswers.vue';
+  import { sortItems } from '@/methods';
 
 
   // Authenticate User
@@ -95,8 +96,8 @@
   let answerFormVisible = ref(false);
 
   let answers = ref([])
-  let oldestAnswersFirst = []
-  let newestAnswersFirst = []
+  //let oldestAnswersFirst = []
+  //let newestAnswersFirst = []
 
   let answersCollectionRef = collection(db, "answers")
   
@@ -129,29 +130,17 @@
 
       })
 
-      prepareAnswers(firebaseAnswers)
-      sortAnswers()
+
+      answers.value = sortItems(firebaseAnswers, sort.value)
+
     })
 
   });
 
-  const prepareAnswers = (answers) => {
-      oldestAnswersFirst = [...answers]
-      newestAnswersFirst = [...answers].reverse()
-
-      console.log(newestAnswersFirst)
-      console.log(oldestAnswersFirst)
+  const callSortItems = () => {
+    answers.value = sortItems(answers.value, sort.value)
   }
 
-  const sortAnswers = () =>{
-    console.log(sort.value)
-    if(sort.value === "newest"){
-      answers.value = newestAnswersFirst
-    } else {
-      answers.value = oldestAnswersFirst
-    }
-  }
-  
   
   // Get Question from firebase
   const getQuestion = async (id) => {
@@ -208,26 +197,7 @@
       width: 100%;
       margin-top: 1.2rem;
     }
-    .tools-left-side{
-      @include flex-row();
-      align-items: center;
-      .title{
-        margin-right: 3rem;
-        color: $green;
-        font-size: 3rem;
-      }
-    }
-
-    .tools-right-side{
-      @include flex-row();
-      align-items: center;
-      justify-content: center;
-      .label{
-        margin-right: 2rem;
-        font-size: 2rem;
-        color: $white;
-      }
-    }
+    
 
     /* Mobile View Button */
 

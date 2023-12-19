@@ -140,3 +140,26 @@ $white: white;
         grid-template-columns: repeat(2, 50%);
     }
 }
+
+/* Tools */
+
+.tools-left-side{
+    @include flex-row();
+    align-items: center;
+    .title{
+      margin-right: 3rem;
+      color: $green;
+      font-size: 3rem;
+    }
+  }
+
+  .tools-right-side{
+    @include flex-row();
+    align-items: center;
+    justify-content: center;
+    .label{
+      margin-right: 2rem;
+      font-size: 2rem;
+      color: $white;
+    }
+  }
