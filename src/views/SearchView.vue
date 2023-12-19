@@ -158,4 +158,28 @@
         }
 
     }
+
+    @media(max-width: 700px){
+        .switch-buttons{
+            width: 100%;
+        }
+        .switch-btn{
+            width: 50%;
+            text-align: center;
+            padding: 1rem;
+            border: none;
+            background-color: $purple;
+            color: $grey;
+        }
+        .chosen-btn{
+            background-color: $green;
+        }
+        .users-btn{
+            margin-left: 0.5rem;
+        }
+        .questions-btn{
+            margin-right: 0.5rem;
+        }
+
+    }
 </style>

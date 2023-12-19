@@ -95,7 +95,7 @@
 <style lang="scss" scoped>
     @import "@/assets/style.scss";
     .mobile-navigation{
-        height: 10vh;
+        height: 8vh;
         width: 100%;
         background-color: $green;
         @include flex-row();

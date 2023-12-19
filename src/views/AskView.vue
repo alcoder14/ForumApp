@@ -9,7 +9,7 @@
                 <input type="text" placeholder="Question" class="form-input-light question-input" v-model="question" :class="{'input-error': errMessageQuestion !== null}">
 
 
-                <select class="dropdown" v-model="category">
+                <select class="dropdown dropdown-margin" v-model="category">
                     <option value="general">general</option>
                     <option value="philosophy">philosophy</option>
                     <option value="science">science</option>
@@ -22,6 +22,7 @@
                 <p class="errMessage" v-if="errMessageQuestion !== null">{{ errMessageQuestion }}</p>
 
                 <textarea rows="15" placeholder="Description" class="form-input-light description-input" v-model="description"></textarea>
+
                 <button type="submit" class="form-submit submit-question-btn">Submit</button>
             </form>
         </div>
@@ -125,6 +126,14 @@
         }
         .question-input{
             margin-right: 0;
+        }
+
+        .dropdown-margin{
+            margin-bottom: 1rem;
+        }
+        .submit-question-btn{
+            width: 100%;
+            color: $purple;
         }
 
     }

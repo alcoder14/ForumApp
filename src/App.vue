@@ -32,7 +32,7 @@
   let visibleNavbar = ref(null)
 
   const checkWidth = () => {
-    if(window.innerWidth > 860){
+    if(window.innerWidth > 1250){
       visibleNavbar.value = "desktop"
     } else {
       visibleNavbar.value = "mobile"

@@ -50,4 +50,10 @@
         margin-top: 1rem;
         color: $green;
     }
+
+    @media(max-width: 1300px){
+        .username{
+            font-size: 2rem;
+        }
+    }
 </style>

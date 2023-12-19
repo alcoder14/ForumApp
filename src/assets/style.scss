@@ -134,3 +134,9 @@ $white: white;
     justify-content: space-between;
     margin-top: 4rem;
 }
+
+@media(max-width: 860px){
+    .users-container{
+        grid-template-columns: repeat(2, 50%);
+    }
+}
