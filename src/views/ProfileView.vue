@@ -44,10 +44,18 @@
 
                     <h4 class="user-data-username">Full Name</h4>
                 </div>
+
+                <button class="follow-btn-desktop tool tool-green" @click="followUser" v-if="authenticatedUserUID !== userDataRef.userID && !isFollowed"><font-awesome-icon icon="fa fa-plus"/> Follow </button>
                 
+                <button class="unfollow-btn-desktop tool tool-green" v-if="isFollowed" @click="unfollowUser">Unfollow</button>
             </div>
 
             <div class="user-activity">
+
+                <button class="follow-btn-mobile tool tool-green" @click="followUser" v-if="authenticatedUserUID !== userDataRef.userID && !isFollowed"><font-awesome-icon icon="fa fa-plus"/> Follow </button>
+                
+                <button class="unfollow-btn-mobile tool tool-green" v-if="isFollowed" @click="unfollowUser">Unfollow</button>
+
                 <div class="option-boxes">
                     <button class="option-box" @click="setVisibleDataset($event)" :class="{'chosen-option-box': visibleDataSet === 'Questions'}">Questions</button>
                     <button class="option-box" @click="setVisibleDataset($event)" :class="{'chosen-option-box': visibleDataSet === 'Answers'}">Answers</button>
@@ -60,13 +68,8 @@
                 <div class="user-answers" v-if="visibleDataSet === 'Answers'">
                     <AnswerItem v-for="answer in userAnswers" :key="answer.id" :answerData="answer" :showQuestion="true" />
                 </div>
-                <div class="user-following" v-if="visibleDataSet === 'Following'">
-                    No Data
-                </div>
-                <div class="user-followers" v-if="visibleDataSet === 'Followers'">
-                    No Data
-                </div>
-
+                <FollowingContainer v-if="visibleDataSet === 'Following'" :profileUserID="userID" />
+                <FollowersContainer v-if="visibleDataSet === 'Followers'" :profileUserID="userID"/>
             </div>
 
             <!-- Modals with fixed position -->
@@ -87,14 +90,17 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref} from 'vue';
     import { useRoute } from 'vue-router';
     import { db } from '@/firebase';
-    import { doc, getDoc, updateDoc, collection, query, where, getDocs, deleteDoc} from 'firebase/firestore';
+    import { doc, getDoc, updateDoc, collection, query, where, getDocs, deleteDoc, addDoc} from 'firebase/firestore';
     import { getAuth, onAuthStateChanged} from 'firebase/auth';
     import QuestionItem from '@/boxes/QuestionItem.vue';
     import AnswerItem from '@/boxes/AnswerItem.vue';
     import MobileSettingsModal from '@/modals/MobileSettingsModal.vue';
+    import FollowersContainer from '@/components/ProfilePage/FollowersContainer.vue';
+    import FollowingContainer from '@/components/ProfilePage/FollowingContainer.vue';
+    import { emitter } from "@/emitter"
 
     // Authentication Check
     let auth = getAuth()
@@ -114,11 +120,13 @@
         }
     }
 
-    onMounted(() => {
-        getUserData()
+    onMounted( async () => {
         getUserQuestions()
         getUserAnswers()
         checkScreenWidth()
+        await getUserData()
+        checkFollowing()
+
     })
 
     window.addEventListener("resize", checkScreenWidth)
@@ -140,12 +148,13 @@
                 memberSince: userData.data().memberSince,
                 username: userData.data().username,
                 email: userData.data().email,
-                userID: userData.data().uid
+                userID: userData.id
             }
 
             username.value = userDataRef.value.username
             fullname.value = userDataRef.value.fullName
         }
+
     }
 
 
@@ -164,7 +173,6 @@
         })
 
         userQuestions.value = userQuestionsFirebase
-        console.log(userQuestions.value)
     
     }
 
@@ -229,7 +237,6 @@
     let visibleDataSet = ref("Questions")
     const setVisibleDataset = (e) => {
         visibleDataSet.value = e.target.innerText
-        console.log(visibleDataSet.value)
     }
 
     // Enable updating username 
@@ -304,14 +311,11 @@
     let mobileSettingsVisible = ref(false)
     const toggleMobileSettings = () =>{
         mobileSettingsVisible.value = !mobileSettingsVisible.value
-        console.log("here")
     }
 
     // Receive Update From Mobile form
 
     const receiveUpdateFromMobile = (newUsername, newFullName) => {
-        console.log(newUsername)
-        console.log(newFullName)
 
         if(newUsername !== userDataRef.value.username){
             updateUsername(newUsername, userDataRef.value.username)
@@ -322,6 +326,54 @@
         }
 
         toggleMobileSettings()
+    }
+
+    // Followers/Following Functionality
+
+    const followUser = async () => {
+        console.log("followUser")
+
+        await addDoc(collection(db, "followers"), {
+            followerID: authenticatedUserUID.value,
+            followedUserID: userID 
+        })
+        emitter.emit("refreshFollowers")
+        checkFollowing()
+
+    }
+
+    // Check if authenticated user is already following the profile
+
+    let isFollowed = ref(false)
+    let recordID = null 
+
+    const checkFollowing = async () => {
+
+        const q = query(collection(db, "followers"), where("followerID", "==", authenticatedUserUID.value), where("followedUserID", "==", userID))
+
+        const querySnapshot = await getDocs(q)
+
+        if(querySnapshot.empty){
+            isFollowed.value = false
+        } else {
+            isFollowed.value = true
+            // note: querySnapshot always contains only 1 record
+            querySnapshot.forEach((doc) => {
+                if(doc.id !== undefined){
+                    recordID = doc.id
+                } else {
+                    recordID = null
+                }
+            })
+        }
+        
+    }
+
+    const unfollowUser = async () => {
+        await deleteDoc(doc(db, "followers", recordID))
+
+        emitter.emit("refreshFollowers")
+        checkFollowing();
     }
 
 
@@ -388,9 +440,6 @@
         color: $lightgrey;
         font-size: 1.5rem;
         font-weight: lighter;
-    }
-    .last{
-        margin-bottom: 3rem;
     }
 
     .option-boxes{
@@ -461,6 +510,13 @@
         }
     }
 
+    .follow-btn-desktop, .unfollow-btn-desktop{
+        margin-top: 1rem;
+    }
+    .follow-btn-mobile, .unfollow-btn-mobile{
+        display: none;
+    }
+
 
     /* Media Queries */
 
@@ -493,6 +549,15 @@
     }
 
     @media(max-width: 860px){
+        .follow-btn-desktop, .unfollow-btn-desktop{
+            display: none;
+        }
+        .follow-btn-mobile, .unfollow-btn-mobile{
+            display: block;
+            width: 100%;
+            margin-top: 2rem
+        }
+
         .user-icon{
             font-size: 5vw;
             padding: 2rem;

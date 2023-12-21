@@ -46,7 +46,7 @@
         border-radius: 50%;
     }
     .username{
-        font-size: 3rem;
+        font-size: 2.5rem;
         margin-top: 1rem;
         color: $green;
     }
