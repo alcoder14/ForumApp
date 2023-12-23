@@ -53,7 +53,6 @@
   let auth = getAuth();
 
   const handleSignOut = () =>{
-    console.log("hello 2")
     signOut(auth)
         .then(() => {
             router.push("/")

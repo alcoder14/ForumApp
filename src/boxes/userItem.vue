@@ -31,7 +31,7 @@
         transition: border 0.4s;
     }
     .user-box:hover{
-        border: 1px solid $green;
+        border: 1px solid $darkpurple;
     }
     .icon-container{
         height: 8rem;
@@ -48,7 +48,7 @@
     .username{
         font-size: 2.5rem;
         margin-top: 1rem;
-        color: $green;
+        color: $darkpurple;
     }
 
     @media(max-width: 1300px){

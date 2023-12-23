@@ -18,7 +18,7 @@
         .pen-icon{
             font-size: 1.5rem;
             margin: 1rem;
-            color: $green;
+            color: $darkpurple;
         }
         h1{
             font-size: 2rem;

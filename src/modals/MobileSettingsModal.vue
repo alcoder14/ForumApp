@@ -58,7 +58,7 @@
 
     .update-profile-title{
         font-size: 3rem;
-        color: $green;
+        color: $darkpurple;
     }
     .close-btn{
         background-color: $purple;

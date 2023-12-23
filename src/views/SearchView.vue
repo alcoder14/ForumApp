@@ -6,9 +6,9 @@
                 <div class="results">
                     <h1 class="title">Results for "{{ searchQuery }}"</h1>
                     <div class="switch-buttons">
-                        <button class="switch-btn questions-btn" @click="toggleVisibleResultSet('questions')" :class="{'chosen-btn': visibleResultSet == 'questions'}" >Questions <span class="number">{{ questions.length }}</span></button>
+                        <button class="switch-btn left-btn" @click="toggleVisibleResultSet('questions')" :class="{'chosen-btn': visibleResultSet == 'questions'}" >Questions <span class="number">{{ questions.length }}</span></button>
 
-                        <button class="switch-btn users-btn" @click="toggleVisibleResultSet('users')" :class="{'chosen-btn': visibleResultSet == 'users'}">Users <span class="number">{{ users.length }}</span></button>
+                        <button class="switch-btn right-btn" @click="toggleVisibleResultSet('users')" :class="{'chosen-btn': visibleResultSet == 'users'}">Users <span class="number">{{ users.length }}</span></button>
                     </div>
                 </div>
 
@@ -49,7 +49,6 @@
     const route = useRoute();
     const searchQuery = ref(route.params.query)
     let lowercaseQuery = searchQuery.value.toLowerCase()
-
 
     onMounted(() => {
         filterQuestions()
@@ -123,23 +122,6 @@
     .number{
         margin-left: 1rem;
     }
-    .switch-btn{
-        padding: 1rem 4rem 1rem 0;
-        font-size: 2rem;
-        background-color: transparent;
-        border: none;
-        border-bottom: 2px solid $purple;
-        color: $purple;
-        outline: none;
-        cursor: pointer;
-    }
-    .chosen-btn{
-        color: $green;
-        border-bottom: solid 2px $green;
-    }
-    .users-btn{
-        margin-left: 1rem;
-    }
     .no-results{
         background-color: $grey;
         height: 50vh;
@@ -159,27 +141,4 @@
 
     }
 
-    @media(max-width: 700px){
-        .switch-buttons{
-            width: 100%;
-        }
-        .switch-btn{
-            width: 50%;
-            text-align: center;
-            padding: 1rem;
-            border: none;
-            background-color: $purple;
-            color: $grey;
-        }
-        .chosen-btn{
-            background-color: $green;
-        }
-        .users-btn{
-            margin-left: 0.5rem;
-        }
-        .questions-btn{
-            margin-right: 0.5rem;
-        }
-
-    }
 </style>

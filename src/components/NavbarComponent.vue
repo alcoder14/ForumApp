@@ -47,7 +47,6 @@
     })
 
     const emitSignOut = () => {
-        console.log("hello")
         emits('signOut')
     }
 
@@ -99,10 +98,10 @@
         @include flex-row();
         justify-content: center;
         align-items: center;
-        border-bottom: 0.3rem solid $green;
+        border-bottom: 0.3rem solid $darkpurple;
         background-color: $darkgrey;
         font-size: 2rem;
-        color: $green;
+        color: $darkpurple;
         outline: 0;
         border-top: 0;
         border-left: 0;
@@ -111,7 +110,7 @@
         transition: all 0.4s;
     }
     .btn-link:hover{
-        background-color: $green;
+        background-color: $darkpurple;
         border-bottom: $darkgrey 0.3rem solid;
         color: $darkgrey;
     }

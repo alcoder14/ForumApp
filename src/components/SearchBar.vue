@@ -42,8 +42,8 @@
             padding: 6px 12px;
             outline: 0;
             border: 0;
-            border-left: 3px solid $green;
-            color: $green;
+            border-left: 3px solid $darkpurple;
+            color: $darkpurple;
             background-color: $darkgrey;
             font-size: 2rem
         }
@@ -51,19 +51,19 @@
             @include flex-row();
             justify-content: center;
             align-items: center;
-            color: $green;
+            color: $darkpurple;
             background-color: $darkgrey;
             cursor: pointer;
             transition: all 0.4s;
             font-size: 2rem;
         }
         .search-icon-container:hover{
-            background-color: $green;
+            background-color: $darkpurple;
             color: $darkgrey;
         }
         
         input::placeholder{
-            color: $green;
+            color: $darkpurple;
         }
     }
 

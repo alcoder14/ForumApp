@@ -62,7 +62,7 @@
     .forgot-password{
         margin-bottom: 1.2rem;
         align-self: flex-start;
-        color: $green;
+        color: $darkpurple;
         font-size: 1.4rem;
         text-decoration: none;
     }

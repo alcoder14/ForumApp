@@ -24,7 +24,7 @@
     @include flex-column();
 }
 .form-title{
-    color: $green;
+    color: $darkpurple;
     font-size: 4rem;
 }
 .form-error{
@@ -43,16 +43,16 @@
 }
 .form-input-dark{
     background-color: $darkgrey;
-    border-left: 3px $green solid;
+    border-left: 3px $darkpurple solid;
     color: $lightgrey;
 }
 .form-input-light{
     background-color: $grey;
-    border-left: 3px $green solid;
+    border-left: 3px $darkpurple solid;
     color: $white;
 }
 .form-submit{
-    background-color: $green;
+    background-color: $darkpurple;
     cursor: pointer;
 }
 .form-alternative-container{
@@ -71,7 +71,7 @@
     background-color: $darkgrey;
     border: none;
     outline: none;
-    color: $green;
+    color: $darkpurple;
     cursor: pointer;
 }
 
@@ -109,7 +109,7 @@
     font-size: 2rem;
     outline: 0;
     border: 0;
-    border-left: 2px solid $green;
+    border-left: 2px solid $darkpurple;
     margin-bottom: 0.5rem;
 }
 .edit-user-btn{
@@ -123,5 +123,5 @@
     transition: all 0.2s;
 }
 .edit-user-btn:hover{
-    background-color: $green;
+    background-color: $darkpurple;
 }

@@ -8,7 +8,7 @@
     flex-direction: column;
 }
 
-$green: #a585c7;
+$darkpurple: #a585c7;
 $purple: #e0d1ff;
 $grey: #363636;
 $darkgrey: #2C2C2C;
@@ -29,6 +29,7 @@ $white: white;
     margin-left: auto;
     margin-right: auto;
     min-height: 90vh;
+    padding-bottom: 4rem;
 }
 @media(max-width: 1300px){
     .inner-container{
@@ -118,11 +119,11 @@ $white: white;
 }
 
 .link-purple:hover{
-    color: $green;
+    color: $darkpurple;
 }
 
 .link-green{
-    color: $green;
+    color: $darkpurple;
 }
 
 /* Users Container */
@@ -148,7 +149,7 @@ $white: white;
     align-items: center;
     .title{
       margin-right: 3rem;
-      color: $green;
+      color: $darkpurple;
       font-size: 3rem;
     }
   }
@@ -163,3 +164,49 @@ $white: white;
       color: $white;
     }
   }
+
+// Switch buttons
+
+
+.switch-btn{
+    padding: 1rem 4rem 1rem 0;
+    font-size: 2rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid $purple;
+    color: $purple;
+    outline: none;
+    cursor: pointer;
+}
+.chosen-btn{
+    color: $darkpurple;
+    border-bottom: solid 2px $darkpurple;
+}
+.right-btn{
+    margin-left: 1rem;
+}
+
+@media(max-width: 700px){
+    .switch-buttons{
+        width: 100%;
+        @include flex-row();
+    }
+    .switch-btn{
+        width: 50%;
+        text-align: center;
+        padding: 1rem;
+        border: none;
+        background-color: $purple;
+        color: $grey;
+    }
+    .chosen-btn{
+        background-color: $darkpurple;
+    }
+
+    .right-btn{
+        margin-left: 0.5rem;
+    }
+    .left-btn{
+        margin-right: 0.5rem;
+    }
+}

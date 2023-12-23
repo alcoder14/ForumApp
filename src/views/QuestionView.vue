@@ -178,7 +178,7 @@
     }
     .question-title{
       font-size: 4.5rem;
-      color: $green;
+      color: $darkpurple;
       margin-top: 1.2rem;
     }
     .question-metadata{
@@ -206,7 +206,7 @@
         bottom: 120px;
         right: 30px;
         z-index: 10;
-        background-color: $green;
+        background-color: $darkpurple;
         color: $darkgrey;
         padding: 15px;
         font-size: 2rem;

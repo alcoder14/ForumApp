@@ -396,7 +396,7 @@
         @include flex-row();
         justify-content: center;
         align-items: center;
-        background-color: $green;
+        background-color: $darkpurple;
         color: $darkgrey;
         height: 15rem;
         width: 15rem;
@@ -423,7 +423,7 @@
         cursor: pointer;
         transition: all 0.4s;
         .edit-icon{
-            color: $green;
+            color: $darkpurple;
         }
     }
     .edit-btn:hover{
@@ -458,10 +458,10 @@
             transition: all 0.2s;
         }
         .option-box:hover{
-            background-color: $green;
+            background-color: $darkpurple;
         }
         .chosen-option-box{
-            background-color: $green;
+            background-color: $darkpurple;
         }
 
     }

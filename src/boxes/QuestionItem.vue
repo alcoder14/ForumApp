@@ -49,7 +49,6 @@
         auth = getAuth()
         onAuthStateChanged(auth, (user) => {
             if(user){
-                console.log(user)
 
                 if(user.uid === questionDataValues.value.authorID){
                     authorAuthenticated.value = true

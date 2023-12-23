@@ -34,7 +34,7 @@
         padding: 2rem;
     }
     .answer-author{
-        color: $green;
+        color: $darkpurple;
         font-size: 2.3rem;
         font-weight: lighter;
     }

@@ -38,7 +38,7 @@
     }
     .question-text{
         font-size: 3rem;
-        color: $green;
+        color: $darkpurple;
         padding: 0 30px;
         text-align: left;
     }

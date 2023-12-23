@@ -97,7 +97,7 @@
     .mobile-navigation{
         height: 8vh;
         width: 100%;
-        background-color: $green;
+        background-color: $darkpurple;
         @include flex-row();
         justify-content: space-between;
         align-items: center;
@@ -139,7 +139,7 @@
             transition: color 0.2s;
         }
         .topic-list-item:hover{
-            color: $green;
+            color: $darkpurple;
         }
     }
 
